@@ -163,15 +163,16 @@ app.post('/edit/:articleID', (req, res) =>{
 
   const id = req.params.articleID;
   //check if articleID is digit number
-  if(id.match(/\d+/)){ 
+  if(id.match(/^\d+$/)){ 
     if(id < articleSequenceNumber && id > 0){
       const articleElement = articlesArray.find((article)=> article.id == id);
       const dateString = convertToStringFormatForDateInputTag(articleElement.date);
       res.render("edit_article.ejs", {article:articleElement, date:dateString});
-    }else
-      res.send('404');
+    }else{
+      res.status(400).send("article does not exist.");
+    }
   }else{
-    res.send('404');
+    res.status(400).send("article ID is not a number");
   }
   
 });
@@ -294,15 +295,15 @@ app.get("/login", (req, res)=>{
 app.get('/article/:articleID', (req, res) =>{
   const id = req.params.articleID;
    //check if articleID is digit number
-  if(id.match(/\d+/)){ 
+  if(id.match(/^\d+$/)){ 
     if(id <= articleSequenceNumber && id > 0){     
       const articleElement = articlesArray.find((article)=> article.id == id);
       res.render("article.ejs", {article:articleElement});
     }else{
-      res.send('404');
+      res.status(400).send("article does not exist.");
     }
   }else{
-    res.send('404');
+    res.status(400).send("article ID is not a number");
   }
   
 });
